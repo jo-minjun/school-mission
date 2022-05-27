@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName(value = "Student 엔티티 테스트")
 class StudentTest {
 
     @Test
-    @DisplayName(value = "Student 빌더 테스트")
+    @DisplayName(value = "Student 빌더")
     void builder() {
         // given
         String name = "student";
@@ -27,7 +28,7 @@ class StudentTest {
     }
 
     @Test
-    @DisplayName(value = "Student 같은 id, 다른 필드 Equals 테스트")
+    @DisplayName(value = "Student 같은 id, 다른 필드 Equals")
     public void equals_id() {
         //given
         long id = 1;
@@ -52,7 +53,7 @@ class StudentTest {
     }
 
     @Test
-    @DisplayName(value = "Student 다른 id, 같은 필드 Equals 테스트")
+    @DisplayName(value = "Student 다른 id, 같은 필드 Equals")
     public void equals_field() {
         //given
         String name = "student";
