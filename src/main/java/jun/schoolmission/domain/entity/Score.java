@@ -1,8 +1,6 @@
 package jun.schoolmission.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Entity;
@@ -11,7 +9,10 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class Score {
 
     @Id
