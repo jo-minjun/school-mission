@@ -1,5 +1,6 @@
 package jun.schoolmission.common;
 
+import jun.schoolmission.common.exception.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,10 +15,10 @@ public class ResponseMessage<T> {
         return this;
     }
 
-    public ResponseMessage<T> fail(String code, String message) {
+    public ResponseMessage<T> fail(ErrorCode errorCode) {
         error = Error.builder()
-                .code(code)
-                .message(message)
+                .code(errorCode.toString())
+                .message(errorCode.getMessage())
                 .build();
         return this;
     }
