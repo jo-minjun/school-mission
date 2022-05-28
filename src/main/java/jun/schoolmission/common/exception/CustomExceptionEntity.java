@@ -9,9 +9,9 @@ import lombok.*;
 public class CustomExceptionEntity {
 
     private ErrorCode errorCode;
-    private String identifier;
+    private String explain;
 
-    public String getIdentifiedMessage() {
-        return errorCode.getMessage() + " [" + identifier + "]";
+    public String getExplainMessage() {
+        return errorCode.getMessage() + " [" + explain + "]";
     }
 }

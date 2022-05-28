@@ -28,7 +28,7 @@ public class ResponseMessage<T> {
         ErrorCode errorCode = entity.getErrorCode();
         error = Error.builder()
                 .code(errorCode.toString())
-                .message(entity.getIdentifiedMessage())
+                .message(entity.getExplainMessage())
                 .build();
         return this;
     }
