@@ -14,21 +14,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {AlreadyExistException.class})
     public ResponseEntity<ResponseMessage<?>> handleAlreadyExistException(AlreadyExistException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        logException(e, errorCode);
+        CustomExceptionEntity entity = e.getEntity();
+        logException(e, entity);
 
-        return ResponseEntity.badRequest().body(new ResponseMessage<>().fail(errorCode));
+        return ResponseEntity.badRequest().body(new ResponseMessage<>().fail(entity));
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<ResponseMessage<?>> handleNotFoundException(NotFoundException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        logException(e, errorCode);
+        CustomExceptionEntity entity = e.getEntity();
+        logException(e, entity);
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage<>().fail(errorCode));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage<>().fail(entity));
     }
 
-    private void logException(RuntimeException e, ErrorCode errorCode) {
-        log.warn("Handle {} : {}", e.getClass().getSimpleName(), errorCode.toString());
+    private void logException(RuntimeException e, CustomExceptionEntity entity) {
+        ErrorCode errorCode = entity.getErrorCode();
+        log.warn("Handle {} : {}", e.getClass().getSimpleName(), entity.getIdentifiedMessage());
     }
 }

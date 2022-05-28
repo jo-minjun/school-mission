@@ -1,11 +1,14 @@
 package jun.schoolmission.common.exception;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NotFoundException extends RuntimeException {
 
-    private final ErrorCode errorCode;
+    private CustomExceptionEntity entity;
 }
