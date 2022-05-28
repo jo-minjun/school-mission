@@ -95,7 +95,7 @@ class StudentServiceImplTest {
         );
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Saved Student Size: {0}")
     @ValueSource(ints = {0, 5, 25, 125})
     @DisplayName(value = "Student 조회")
     void search_student_dtos_all(int studentSize) {
