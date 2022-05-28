@@ -7,6 +7,7 @@ import jun.schoolmission.common.exception.ErrorCode;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.dto.StudentDto;
 import jun.schoolmission.domain.dto.StudentInputDto;
+import jun.schoolmission.domain.entity.Student;
 import jun.schoolmission.service.StudentService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +23,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 import static jun.schoolmission.common.exception.ErrorCode.ALREADY_EXIST_STUDENT;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -115,9 +122,9 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ALREADY_EXIST_STUDENT.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ALREADY_EXIST_STUDENT.toString())))
                 .andExpect(jsonPath("$.error.message",
-                        Matchers.equalTo(entity.getExplainMessage())
+                        equalTo(entity.getExplainMessage())
                 ));
     }
 
@@ -148,7 +155,7 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString(SchoolType.exceptionMessage)));
     }
@@ -181,7 +188,7 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("age는 8 ~ 19 만 가능합니다.")));
     }
@@ -214,7 +221,7 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("name은 1 ~ 16 자만 가능합니다.")));
     }
@@ -246,7 +253,7 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("phoneNumber은 000-0000-0000 형식만 가능합니다.")));
     }
@@ -277,11 +284,43 @@ class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isNotEmpty())
-                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("name은 1 ~ 16 자만 가능합니다.")))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("age는 8 ~ 19 만 가능합니다.")))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString(SchoolType.exceptionMessage)))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("phoneNumber은 000-0000-0000 형식만 가능합니다.")));
+    }
+
+    @ParameterizedTest(name = "Saved Student Size: {0}")
+    @ValueSource(ints = {0, 5, 25, 125})
+    @DisplayName(value = "Student 조회")
+    void search_students(int studentSize) throws Exception {
+        // given
+        List<StudentDto> studentDtos = new ArrayList<>();
+        IntStream.range(0, studentSize).forEach(i ->
+                studentDtos.add(StudentDto.of(create_student(i)))
+        );
+
+        when(studentService.searchStudentDtos()).thenReturn(studentDtos);
+
+        // when
+        ResultActions request = mockMvc.perform(get(rootUrl));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isNotEmpty())
+                .andExpect(jsonPath("$.data.students").isArray())
+                .andExpect(jsonPath("$.data.students.length()", equalTo(studentSize)));
+    }
+
+    Student create_student(int i) {
+        return Student.builder()
+                .name("student" + i)
+                .age(18)
+                .schoolType(SchoolType.HIGH)
+                .phoneNumber("000-0000-" + String.format("%04d", i))
+                .build();
     }
 }
