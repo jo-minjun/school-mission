@@ -258,7 +258,7 @@ class StudentControllerTest {
         StudentInputDto studentInputDto = StudentInputDto.builder()
                 .student(StudentDto.builder()
                         .name("")
-                        .age(12)
+                        .age(7)
                         .schoolType("고등")
                         .phoneNumber("01-0000-0000")
                         .build()

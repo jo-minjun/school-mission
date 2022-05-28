@@ -1,6 +1,7 @@
 package jun.schoolmission.domain.dto;
 
 import jun.schoolmission.common.annotation.Enum;
+import jun.schoolmission.common.annotation.PhoneNumber;
 import jun.schoolmission.common.annotation.StudentName;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.entity.Student;
@@ -33,6 +34,7 @@ public class StudentDto {
     @Enum(enumClass = SchoolType.class, ignoreCase = true, message = exceptionMessage)
     private String schoolType;
 
+    @PhoneNumber(message = "phoneNumber은 000-0000-0000 형식만 가능합니다.")
     private String phoneNumber;
 
     public static StudentDto of(Student student) {
