@@ -155,7 +155,7 @@ class StudentControllerTest {
 
     @ParameterizedTest(name = "age: {0}")
     @ValueSource(ints = {7, 20})
-    @DisplayName(value = "Student 등록 실패 - 옳지 않은 나이")
+    @DisplayName(value = "Student 등록 실패 - 옳지 않은 age")
     void create_student_fail_age(int age) throws Exception {
         //given
         String phoneNumber = "010-1234-5678";
@@ -188,7 +188,7 @@ class StudentControllerTest {
 
     @ParameterizedTest(name = "name: {0}")
     @ValueSource(strings = {"", "0123456789ABCDEFGH", "가나다라마바사아자차카타파하0123456789"})
-    @DisplayName(value = "Student 등록 실패 - 옳지 않은 이름")
+    @DisplayName(value = "Student 등록 실패 - 옳지 않은 name")
     void create_student_fail_name(String name) throws Exception {
         //given
         String phoneNumber = "010-1234-5678";
@@ -221,7 +221,7 @@ class StudentControllerTest {
 
     @ParameterizedTest(name = "phoneNumber: {0}")
     @ValueSource(strings = {"", "010", "0101-3403", "010-00000-0000", "010-0000-00000", "010-0000-0000-0"})
-    @DisplayName(value = "Student 등록 실패 - 옳지 않은 번호")
+    @DisplayName(value = "Student 등록 실패 - 옳지 않은 phoneNumber")
     void create_student_fail_phone_number(String phoneNumber) throws Exception {
         //given
         StudentInputDto studentInputDto = StudentInputDto.builder()
@@ -248,6 +248,40 @@ class StudentControllerTest {
                 .andExpect(jsonPath("$.error").isNotEmpty())
                 .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString("phoneNumber은 000-0000-0000 형식만 가능합니다.")));
+    }
+
+    @Test
+    @DisplayName(value = "Student 등록 실패 - 옳지 않은 name, age, SchoolType, phoneNumber")
+    void create_student_fail_complex() throws Exception {
+        //given
+        StudentInputDto studentInputDto = StudentInputDto.builder()
+                .student(StudentDto.builder()
+                        .name("")
+                        .age(12)
+                        .schoolType("고등")
+                        .phoneNumber("01-0000-0000")
+                        .build()
+                )
+                .build();
+
+        //when
+        ResultActions request = mockMvc.perform(post(rootUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentInputDto))
+        );
+
+        //then
+        request.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error").isNotEmpty())
+                .andExpect(jsonPath("$.error.code", Matchers.equalTo(ErrorCode.BAD_REQUEST.toString())))
+                .andExpect(jsonPath("$.error.message", Matchers.startsWith(ErrorCode.BAD_REQUEST.getMessage())))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString("name은 1 ~ 16 자만 가능합니다.")))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString("age는 8 ~ 19 만 가능합니다.")))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString(SchoolType.exceptionMessage)))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("phoneNumber은 000-0000-0000 형식만 가능합니다.")));
     }
 }
