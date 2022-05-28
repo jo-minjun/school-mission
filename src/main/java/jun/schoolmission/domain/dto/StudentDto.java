@@ -9,13 +9,13 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id", "phoneNumber"})
+@EqualsAndHashCode(of = {"phoneNumber"})
 public class StudentDto {
 
     private Long id;
     private String name;
     private Integer age;
-    private SchoolType schoolType;
+    private String schoolType;
     private String phoneNumber;
 
     public static StudentDto of(Student student) {
@@ -23,7 +23,7 @@ public class StudentDto {
                 .id(student.getId())
                 .name(student.getName())
                 .age(student.getAge())
-                .schoolType(student.getSchoolType())
+                .schoolType(student.getSchoolType().toString())
                 .phoneNumber(student.getPhoneNumber())
                 .build();
     }
@@ -32,7 +32,7 @@ public class StudentDto {
         return Student.builder()
                 .name(studentDto.getName())
                 .age(studentDto.getAge())
-                .schoolType(studentDto.getSchoolType())
+                .schoolType(SchoolType.of(studentDto.getSchoolType()))
                 .phoneNumber(studentDto.getPhoneNumber())
                 .build();
     }
