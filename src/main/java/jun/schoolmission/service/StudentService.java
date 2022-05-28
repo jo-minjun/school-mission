@@ -1,2 +1,7 @@
-package jun.schoolmission.service;public interface StudentService {
+package jun.schoolmission.service;
+
+import jun.schoolmission.domain.dto.StudentDto;
+
+public interface StudentService {
+    Long createStudent(StudentDto studentDto);
 }
