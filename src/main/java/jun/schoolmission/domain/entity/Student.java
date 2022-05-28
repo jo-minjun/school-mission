@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"phoneNumber"}, name = "UNIQUE_PHONE_NUMBER"))
@@ -39,4 +40,14 @@ public class Student {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentSubject> studentSubjects = new ArrayList<>();
+
+    public void registerSubjects(List<Subject> subjects) {
+        this.studentSubjects = subjects.stream().map(subject ->
+                        StudentSubject.builder()
+                                .student(this)
+                                .subject(subject)
+                                .build()
+                )
+                .collect(Collectors.toList());
+    }
 }
