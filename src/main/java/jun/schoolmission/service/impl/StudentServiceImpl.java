@@ -39,4 +39,9 @@ public class StudentServiceImpl implements StudentService {
 
         return studentRepository.save(student).getId();
     }
+
+    @Override
+    public List<StudentDto> searchStudentDtos() {
+        return null;
+    }
 }

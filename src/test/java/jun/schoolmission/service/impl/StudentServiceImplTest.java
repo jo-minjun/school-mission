@@ -12,10 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,5 +93,30 @@ class StudentServiceImplTest {
                 .name("subject" + i)
                 .build()
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 5, 25, 125})
+    @DisplayName(value = "Student 조회")
+    void search_student_dtos_all(int studentSize) {
+        // given
+        IntStream.range(0, studentSize).forEach(i ->
+                studentRepository.save(create_student(i))
+        );
+
+        // when
+        List<StudentDto> studentDtos = studentService.searchStudentDtos();
+
+        // then
+        assertThat(studentDtos.size()).isEqualTo(studentSize);
+    }
+
+    Student create_student(int i) {
+        return Student.builder()
+                .name("student" + i)
+                .age(18)
+                .schoolType(SchoolType.HIGH)
+                .phoneNumber("000-0000-" + String.format("%04d", i))
+                .build();
     }
 }
