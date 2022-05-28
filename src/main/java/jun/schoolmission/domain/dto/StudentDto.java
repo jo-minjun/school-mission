@@ -1,8 +1,11 @@
 package jun.schoolmission.domain.dto;
 
+import jun.schoolmission.common.annotation.Enum;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.entity.Student;
 import lombok.*;
+
+import static jun.schoolmission.domain.SchoolType.exceptionMessage;
 
 @Getter
 @Builder
@@ -15,6 +18,7 @@ public class StudentDto {
     private Long id;
     private String name;
     private Integer age;
+    @Enum(enumClass = SchoolType.class, ignoreCase = true, message = exceptionMessage)
     private String schoolType;
     private String phoneNumber;
 
