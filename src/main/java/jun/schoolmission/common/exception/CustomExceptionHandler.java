@@ -17,7 +17,7 @@ import static jun.schoolmission.common.exception.ErrorCode.SERVER_ERROR;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ResponseMessage<?>> handleException(Exception e) {
@@ -30,15 +30,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<ResponseMessage<?>> handleException(MethodArgumentNotValidException e) {
         List<ObjectError> errors = e.getAllErrors();
-        for (ObjectError error : errors) {
+        Iterator<ObjectError> iterator = errors.iterator();
+
+        StringBuilder sb = new StringBuilder();
+        while (iterator.hasNext()) {
+            ObjectError error = iterator.next();
+            sb.append(error.getDefaultMessage());
+
+            if (iterator.hasNext()) {
+                sb.append(", ");
+            }
         }
 
         CustomExceptionEntity entity = CustomExceptionEntity.builder()
                 .errorCode(BAD_REQUEST)
-                .explain("")
+                .explain(sb.toString())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage<>().fail(entity));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage<>().fail(entity));
     }
 
     @ExceptionHandler(value = {AlreadyExistException.class})
