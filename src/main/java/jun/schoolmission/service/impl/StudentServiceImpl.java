@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> searchStudentDtos() {
-        return null;
+        return studentRepository.findAll().stream()
+                .map(StudentDto::of)
+                .collect(Collectors.toList());
     }
 }
