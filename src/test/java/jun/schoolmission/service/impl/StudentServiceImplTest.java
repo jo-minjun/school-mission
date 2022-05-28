@@ -1,7 +1,6 @@
 package jun.schoolmission.service.impl;
 
 import jun.schoolmission.common.exception.AlreadyExistException;
-import jun.schoolmission.common.exception.ErrorCode;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.dto.StudentDto;
 import jun.schoolmission.domain.entity.Student;
@@ -84,8 +83,7 @@ class StudentServiceImplTest {
         // then
         studentService.createStudent(studentDto1);
         assertThatThrownBy(() -> studentService.createStudent(studentDto2))
-                .isInstanceOf(AlreadyExistException.class)
-                .hasMessage(ErrorCode.ALREADY_EXIST_STUDENT.getMessage() + " [" + phoneNumber + "]");
+                .isInstanceOf(AlreadyExistException.class);
     }
 
     void create_subject(int i) {
