@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id", "phoneNumber"})
 public class StudentDto {
 
     private Long id;
