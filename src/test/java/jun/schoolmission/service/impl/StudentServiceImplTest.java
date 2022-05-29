@@ -51,7 +51,7 @@ class StudentServiceImplTest {
                 .build();
 
         int subjectSize = 5;
-        IntStream.range(0, 5).forEach(this::create_subject);
+        IntStream.range(0, subjectSize).forEach(this::create_subject);
 
         // when
         Long createdId = studentService.createStudent(studentDto);
@@ -125,13 +125,22 @@ class StudentServiceImplTest {
     @DisplayName(value = "Student 삭제 - Student가 존재하는 경우")
     void delete_student_exist() {
         // given
-        Student savedStudent = studentRepository.save(create_student(0));
+        StudentDto studentDto = StudentDto.builder()
+                .name("aAzZ이ㅏㄱ10")
+                .age(19)
+                .schoolType(SchoolType.HIGH.toString())
+                .phoneNumber("010-1234-5678")
+                .build();
+
+        int subjectSize = 5;
+        IntStream.range(0, subjectSize).forEach(this::create_subject);
+        Long createdId = studentService.createStudent(studentDto);
 
         // when
-        studentService.deleteStudent(savedStudent.getId());
+        studentService.deleteStudent(createdId);
 
         // then
-        Optional<Student> studentOptional = studentRepository.findById(savedStudent.getId());
+        Optional<Student> studentOptional = studentRepository.findById(createdId);
         assertThat(studentOptional.isEmpty()).isTrue();
     }
 
