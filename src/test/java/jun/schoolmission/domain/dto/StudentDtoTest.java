@@ -1,6 +1,7 @@
 package jun.schoolmission.domain.dto;
 
 import jun.schoolmission.domain.SchoolType;
+import jun.schoolmission.domain.dto.student.StudentDto;
 import jun.schoolmission.domain.entity.Student;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

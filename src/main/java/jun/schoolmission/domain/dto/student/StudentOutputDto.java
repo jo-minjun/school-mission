@@ -1,4 +1,4 @@
-package jun.schoolmission.domain.dto;
+package jun.schoolmission.domain.dto.student;
 
 import lombok.Builder;
 import lombok.Getter;

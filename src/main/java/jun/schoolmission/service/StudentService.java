@@ -1,6 +1,6 @@
 package jun.schoolmission.service;
 
-import jun.schoolmission.domain.dto.StudentDto;
+import jun.schoolmission.domain.dto.student.StudentDto;
 
 import java.util.List;
 

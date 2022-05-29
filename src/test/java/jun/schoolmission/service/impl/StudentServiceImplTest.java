@@ -2,7 +2,7 @@ package jun.schoolmission.service.impl;
 
 import jun.schoolmission.common.exception.AlreadyExistException;
 import jun.schoolmission.domain.SchoolType;
-import jun.schoolmission.domain.dto.StudentDto;
+import jun.schoolmission.domain.dto.student.StudentDto;
 import jun.schoolmission.domain.entity.Student;
 import jun.schoolmission.domain.entity.Subject;
 import jun.schoolmission.domain.repository.StudentRepository;

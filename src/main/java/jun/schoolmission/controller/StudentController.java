@@ -1,9 +1,9 @@
 package jun.schoolmission.controller;
 
 import jun.schoolmission.common.ResponseMessage;
-import jun.schoolmission.domain.dto.StudentDto;
-import jun.schoolmission.domain.dto.StudentInputDto;
-import jun.schoolmission.domain.dto.StudentOutputDto;
+import jun.schoolmission.domain.dto.student.StudentDto;
+import jun.schoolmission.domain.dto.student.StudentInputDto;
+import jun.schoolmission.domain.dto.student.StudentOutputDto;
 import jun.schoolmission.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
