@@ -29,9 +29,9 @@ import java.util.stream.IntStream;
 
 import static jun.schoolmission.common.exception.ErrorCode.ALREADY_EXIST_STUDENT;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -322,5 +322,20 @@ class StudentControllerTest {
                 .schoolType(SchoolType.HIGH)
                 .phoneNumber("000-0000-" + String.format("%04d", i))
                 .build();
+    }
+
+    @Test
+    @DisplayName(value = "student 삭제")
+    void delete_student() throws Exception {
+        // given
+        Long id = 0L;
+        doNothing().when(studentService).deleteStudent(id);
+
+        // when
+        ResultActions request = mockMvc.perform(delete(rootUrl + "/" + id));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNoContent());
     }
 }
