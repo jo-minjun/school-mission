@@ -47,4 +47,10 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentDto::of)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public void deleteStudent(Long id) {
+        return;
+    }
 }

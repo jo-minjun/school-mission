@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -118,5 +119,33 @@ class StudentServiceImplTest {
                 .schoolType(SchoolType.HIGH)
                 .phoneNumber("000-0000-" + String.format("%04d", i))
                 .build();
+    }
+
+    @Test
+    @DisplayName(value = "Student 삭제 - Student가 존재하는 경우")
+    void delete_student_exist() {
+        // given
+        Student savedStudent = studentRepository.save(create_student(0));
+
+        // when
+        studentService.deleteStudent(savedStudent.getId());
+
+        // then
+        Optional<Student> studentOptional = studentRepository.findById(savedStudent.getId());
+        assertThat(studentOptional.isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName(value = "Student 삭제 - Student가 존재하지 않는 경우")
+    void delete_student_none_exist() {
+        // given
+        Long id = 10L;
+
+        // when
+        studentService.deleteStudent(id);
+
+        // then
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        assertThat(studentOptional.isEmpty()).isTrue();
     }
 }

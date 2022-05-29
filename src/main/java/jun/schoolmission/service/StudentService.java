@@ -8,4 +8,5 @@ public interface StudentService {
 
     Long createStudent(StudentDto studentDto);
     List<StudentDto> searchStudentDtos();
+    void deleteStudent(Long id);
 }
