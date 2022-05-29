@@ -51,6 +51,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public void deleteStudent(Long id) {
-        return;
+        studentRepository.findById(id).ifPresent(
+                studentRepository::delete
+        );
     }
 }
