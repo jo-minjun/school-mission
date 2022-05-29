@@ -33,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
                     .build());
         });
 
-        Student student = StudentDto.toEntity(studentDto);
+        Student student = studentDto.toEntity();
 
         List<Subject> subjects = subjectRepository.findAll();
         student.registerSubjects(subjects);

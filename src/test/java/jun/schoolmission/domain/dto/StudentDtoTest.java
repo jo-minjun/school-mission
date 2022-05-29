@@ -53,7 +53,7 @@ class StudentDtoTest {
                 .build();
 
         // when
-        Student studentEntity = StudentDto.toEntity(studentDto);
+        Student studentEntity = studentDto.toEntity();
 
         // then
         assertThat(studentEntity).isInstanceOf(Student.class);

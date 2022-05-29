@@ -47,12 +47,12 @@ public class StudentDto {
                 .build();
     }
 
-    public static Student toEntity(StudentDto studentDto) {
+    public Student toEntity() {
         return Student.builder()
-                .name(studentDto.getName())
-                .age(studentDto.getAge())
-                .schoolType(SchoolType.of(studentDto.getSchoolType()))
-                .phoneNumber(studentDto.getPhoneNumber())
+                .name(this.name)
+                .age(this.age)
+                .schoolType(SchoolType.of(this.schoolType))
+                .phoneNumber(this.phoneNumber)
                 .build();
     }
 }
