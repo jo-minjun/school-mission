@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name"}, name = "UNIQUE_NAME"))
@@ -24,4 +25,14 @@ public class Subject {
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentSubject> studentSubjects = new ArrayList<>();
+
+    public void registerStudents(List<Student> students) {
+        this.studentSubjects = students.stream().map(student ->
+                        StudentSubject.builder()
+                                .student(student)
+                                .subject(this)
+                                .build()
+                )
+                .collect(Collectors.toList());
+    }
 }

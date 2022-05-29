@@ -1,7 +1,12 @@
 package jun.schoolmission.domain.entity;
 
+import jun.schoolmission.domain.SchoolType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,5 +69,39 @@ class SubjectTest {
 
         //then
         assertThat(student1).isNotEqualTo(student2);
+    }
+
+    @Test
+    @DisplayName(value = "Subject 추가시 StudentSubject 추가")
+    void register_subject() {
+        // given
+        Long id = 1L;
+        Subject subject = Subject.builder()
+                .id(id)
+                .name("subject1")
+                .build();
+
+        int studentSize = 5;
+        List<Student> students = new ArrayList<>();
+        IntStream.range(0, studentSize).forEach(i -> students.add(createStudent(i)));
+
+        // when
+        subject.registerStudents(students);
+
+        // then
+        assertThat(subject.getStudentSubjects().size()).isEqualTo(studentSize);
+        assertThat(subject.getStudentSubjects()).filteredOn(studentSubject ->
+                        studentSubject.getSubject().getId().equals(id)
+                )
+                .hasSize(studentSize);
+    }
+
+    Student createStudent(int i) {
+        return Student.builder()
+                .name("student" + i)
+                .age(19)
+                .schoolType(SchoolType.HIGH)
+                .phoneNumber("010-0000-0000")
+                .build();
     }
 }
