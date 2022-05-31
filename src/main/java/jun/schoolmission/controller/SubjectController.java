@@ -15,8 +15,8 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/subjects", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@RequestMapping(value = "/subjects", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SubjectController {
 
     private final SubjectService subjectService;
@@ -27,3 +27,4 @@ public class SubjectController {
         return ResponseEntity.created(URI.create("/subjects/" + id)).body(new ResponseMessage<>().success(null));
     }
 }
+
