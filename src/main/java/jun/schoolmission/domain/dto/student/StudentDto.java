@@ -2,7 +2,7 @@ package jun.schoolmission.domain.dto.student;
 
 import jun.schoolmission.common.annotation.Enum;
 import jun.schoolmission.common.annotation.PhoneNumber;
-import jun.schoolmission.common.annotation.StudentName;
+import jun.schoolmission.common.annotation.Name;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.entity.Student;
 import lombok.*;
@@ -23,7 +23,7 @@ public class StudentDto {
 
     private Long id;
 
-    @StudentName(message = "name은 한글/영어/숫자만 가능합니다.")
+    @Name(message = "name은 한글/영어/숫자만 가능합니다.")
     @Size(min = 1, max = 16, message = "name은 1 ~ 16 자만 가능합니다.")
     private String name;
 
