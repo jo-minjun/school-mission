@@ -50,6 +50,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public void deleteSubject(Long id) {
-
+        subjectRepository.findById(id).ifPresent(
+                subjectRepository::delete
+        );
     }
 }
