@@ -27,9 +27,9 @@ import java.util.stream.IntStream;
 import static jun.schoolmission.common.exception.ErrorCode.ALREADY_EXIST_SUBJECT;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -170,5 +170,20 @@ class SubjectControllerTest {
         return Subject.builder()
                 .name("subject" + 1)
                 .build();
+    }
+
+    @Test
+    @DisplayName(value = "Subject 삭제")
+    void delete_subject() throws Exception {
+        // given
+        Long id = 0L;
+        doNothing().when(subjectService).deleteSubject(id);
+
+        // when
+        ResultActions request = mockMvc.perform(delete(rootUrl + "/" + id));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNoContent());
     }
 }
