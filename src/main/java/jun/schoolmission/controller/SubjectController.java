@@ -35,5 +35,11 @@ public class SubjectController {
                 .build();
         return ResponseEntity.ok().body(new ResponseMessage<>().success(subjectOutputDto));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<ResponseMessage<?>> deleteSubject(@PathVariable Long id) {
+        subjectService.deleteSubject(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 
