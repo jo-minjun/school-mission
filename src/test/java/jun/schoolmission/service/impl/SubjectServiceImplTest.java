@@ -10,10 +10,13 @@ import jun.schoolmission.domain.repository.SubjectRepository;
 import jun.schoolmission.service.SubjectService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,5 +85,27 @@ class SubjectServiceImplTest {
                 .phoneNumber("010-0000-000" + i)
                 .build()
         );
+    }
+
+    @ParameterizedTest(name = "Saved Subject Size : {0}")
+    @ValueSource(ints = {0, 5, 25, 125})
+    @DisplayName(value = "Subject 조회")
+    void search_subject_dtos_all(int size) {
+        // given
+        IntStream.range(0, size).forEach(i ->
+                subjectRepository.save(create_subject(i))
+        );
+
+        // when
+        List<SubjectDto> subjectDtos = subjectService.searchSubjectDtos();
+
+        // then
+        assertThat(subjectDtos.size()).isEqualTo(size);
+    }
+
+    Subject create_subject(int i) {
+        return Subject.builder()
+                .name("subject" + i)
+                .build();
     }
 }

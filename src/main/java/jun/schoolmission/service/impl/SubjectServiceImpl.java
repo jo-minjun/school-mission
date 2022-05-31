@@ -39,4 +39,9 @@ public class SubjectServiceImpl implements SubjectService {
 
         return subjectRepository.save(subject).getId();
     }
+
+    @Override
+    public List<SubjectDto> searchSubjectDtos() {
+        return null;
+    }
 }
