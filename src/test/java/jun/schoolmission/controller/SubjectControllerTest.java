@@ -6,6 +6,7 @@ import jun.schoolmission.common.exception.CustomExceptionEntity;
 import jun.schoolmission.common.exception.ErrorCode;
 import jun.schoolmission.domain.dto.subject.SubjectDto;
 import jun.schoolmission.domain.dto.subject.SubjectInputDto;
+import jun.schoolmission.domain.entity.Subject;
 import jun.schoolmission.service.SubjectService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 import static jun.schoolmission.common.exception.ErrorCode.ALREADY_EXIST_SUBJECT;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -135,5 +141,34 @@ class SubjectControllerTest {
                 .andExpect(jsonPath("$.error.code", equalTo(ErrorCode.BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", startsWith(ErrorCode.BAD_REQUEST.getMessage())))
                 .andExpect(jsonPath("$.error.message", containsString("name은 1 ~ 12 자만 가능합니다.")));
+    }
+
+    @ParameterizedTest(name = "Saved Subject Size : {0}")
+    @ValueSource(ints = {0, 5, 25, 125})
+    @DisplayName(value = "Subject 조회")
+    void search_subjects(int size) throws Exception {
+        // given
+        List<SubjectDto> subjects = new ArrayList<>();
+        IntStream.range(0, size).forEach(i ->
+                subjects.add(SubjectDto.of(create_subject(i)))
+        );
+
+        when(subjectService.searchSubjectDtos()).thenReturn(subjects);
+
+        // when
+        ResultActions request = mockMvc.perform(get(rootUrl));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isNotEmpty())
+                .andExpect(jsonPath("$.data.subjects").isArray())
+                .andExpect(jsonPath("$.data.subjects.length()", equalTo(size)));
+    }
+
+    Subject create_subject(int i) {
+        return Subject.builder()
+                .name("subject" + 1)
+                .build();
     }
 }
