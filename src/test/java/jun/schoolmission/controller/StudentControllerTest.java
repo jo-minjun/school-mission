@@ -82,7 +82,7 @@ class StudentControllerTest {
         request.andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location","/students/" + id))
+                .andExpect(header().string("Location", rootUrl+ "/" + id))
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error").isEmpty());
     }
