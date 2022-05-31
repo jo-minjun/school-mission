@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,8 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public List<SubjectDto> searchSubjectDtos() {
-        return null;
+        return subjectRepository.findAll().stream()
+                .map(SubjectDto::of)
+                .collect(Collectors.toList());
     }
 }
