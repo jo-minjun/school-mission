@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -107,5 +108,39 @@ class SubjectServiceImplTest {
         return Subject.builder()
                 .name("subject" + i)
                 .build();
+    }
+
+    @Test
+    @DisplayName(value = "Subject 삭제 - Subject가 존재하는 경우")
+    void delete_subject_exist() {
+        // given
+        SubjectDto subjectDto = SubjectDto.builder()
+                .name("subject")
+                .build();
+
+        int studentSize = 5;
+        IntStream.range(0, studentSize).forEach(this::create_student);
+        Long createdId = subjectService.createSubject(subjectDto);
+
+        // when
+        subjectService.deleteSubject(createdId);
+
+        // then
+        Optional<Subject> subjectOptional = subjectRepository.findById(createdId);
+        assertThat((subjectOptional.isEmpty())).isTrue();
+    }
+
+    @Test
+    @DisplayName(value = "Subject 삭제 - Subject가 존재하지 않는 경우")
+    void delete_subject_none_exist() {
+        // given
+        Long id = 10L;
+
+        // when
+        subjectService.deleteSubject(id);
+
+        // then
+        Optional<Subject> subjectOptional = subjectRepository.findById(id);
+        assertThat((subjectOptional.isEmpty())).isTrue();
     }
 }

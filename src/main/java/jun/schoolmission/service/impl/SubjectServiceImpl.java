@@ -47,4 +47,9 @@ public class SubjectServiceImpl implements SubjectService {
                 .map(SubjectDto::of)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteSubject(Long id) {
+
+    }
 }

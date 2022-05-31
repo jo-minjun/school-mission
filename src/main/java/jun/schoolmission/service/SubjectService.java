@@ -8,4 +8,5 @@ public interface SubjectService {
 
     Long createSubject(SubjectDto subjectDto);
     List<SubjectDto> searchSubjectDtos();
+    void deleteSubject(Long id);
 }
