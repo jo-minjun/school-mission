@@ -24,7 +24,6 @@ public class StudentSubject {
     @JoinColumn(name = "subject_id", foreignKey = @ForeignKey(name = "FK_STUDENT_SUBJECT_TO_SUBJECT"))
     private Subject subject;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "score_id", foreignKey = @ForeignKey(name = "FK_STUDENT_SUBJECT_TO_SCORE"))
+    @OneToOne(mappedBy = "studentSubject", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Score score;
 }
