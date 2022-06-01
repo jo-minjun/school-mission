@@ -12,10 +12,14 @@ public class ScoreDto {
     private Integer score;
 
     public static ScoreDto of(Score score) {
-        return null;
+        return ScoreDto.builder()
+                .score(score.getScore())
+                .build();
     }
 
     public Score toEntity() {
-        return null;
+        return Score.builder()
+                .score(score)
+                .build();
     }
 }
