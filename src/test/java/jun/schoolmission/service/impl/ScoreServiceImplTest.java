@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,12 +42,12 @@ class ScoreServiceImplTest {
     @Autowired
     EntityManager em;
 
-    final Long id = 1L;
+    Long studentId;
+    Long subjectId;
 
     @BeforeEach
     void before_each() {
-        Long studentId = studentService.createStudent(StudentDto.builder()
-                .id(id)
+        studentId = studentService.createStudent(StudentDto.builder()
                 .name("student")
                 .age(18)
                 .schoolType(SchoolType.HIGH.name())
@@ -56,17 +55,11 @@ class ScoreServiceImplTest {
                 .build()
         );
 
-        subjectService.createSubject(
+        subjectId = subjectService.createSubject(
                 SubjectDto.builder()
-                        .id(id)
                         .name("subject")
                         .build()
         );
-
-        em.flush();
-        em.clear();
-        assertThat(studentRepository.findById(studentId).get().getStudentSubjects())
-                .isNotEmpty();
     }
 
     @Test
@@ -77,18 +70,19 @@ class ScoreServiceImplTest {
         ScoreDto scoreDto = ScoreDto.builder()
                 .score(score)
                 .build();
+        em.flush();
+        em.clear();
 
         // when
-        Long scoreId = scoreService.updateScore(id, id, scoreDto);
-        List<StudentSubject> studentSubjects = studentRepository.findById(id).get().getStudentSubjects();
+        scoreService.updateScore(studentId, subjectId, scoreDto);
+        List<StudentSubject> studentSubjects = studentRepository.findById(studentId).get().getStudentSubjects();
         Score savedScore = studentSubjects.stream().filter(studentSubject ->
-                        studentSubject.getStudent().getId().equals(id)
+                        studentSubject.getSubject().getId().equals(subjectId)
                 )
                 .findFirst()
                 .get().getScore();
 
         // then
-        assertThat(savedScore.getId()).isEqualTo(scoreId);
         assertThat(savedScore.getScore()).isEqualTo(score);
     }
 
@@ -99,7 +93,9 @@ class ScoreServiceImplTest {
         ScoreDto scoreDto1 = ScoreDto.builder()
                 .score(90)
                 .build();
-        scoreService.updateScore(id, id, scoreDto1);
+        em.flush();
+        em.clear();
+        scoreService.updateScore(studentId, subjectId, scoreDto1);
 
         int score = 100;
         ScoreDto scoreDto2 = ScoreDto.builder()
@@ -107,16 +103,15 @@ class ScoreServiceImplTest {
                 .build();
 
         // when
-        Long scoreId = scoreService.updateScore(id, id, scoreDto2);
-        List<StudentSubject> studentSubjects = studentRepository.findById(id).get().getStudentSubjects();
+        scoreService.updateScore(studentId, subjectId, scoreDto2);
+        List<StudentSubject> studentSubjects = studentRepository.findById(studentId).get().getStudentSubjects();
         Score savedScore = studentSubjects.stream().filter(studentSubject ->
-                        studentSubject.getStudent().getId().equals(id)
+                        studentSubject.getSubject().getId().equals(subjectId)
                 )
                 .findFirst()
                 .get().getScore();
 
         // then
-        assertThat(savedScore.getId()).isEqualTo(scoreId);
         assertThat(savedScore.getScore()).isEqualTo(score);
     }
 }
