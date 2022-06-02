@@ -104,4 +104,46 @@ class StudentSubjectTest {
         //then
         assertThat(studentSubject1).isNotEqualTo(studentSubject2);
     }
+
+    @Test
+    @DisplayName(value = "Score 업데이트 - 생성")
+    void update_score_new() {
+        // given
+        int score = 100;
+        StudentSubject studentSubject = StudentSubject.builder()
+                .student(null)
+                .subject(null)
+                .build();
+
+        // when
+        studentSubject.updateScore(score);
+
+        // then
+        assertThat(studentSubject.getScore().getScore()).isEqualTo(score);
+    }
+
+    @Test
+    @DisplayName(value = "Score 업데이트 - 업데이트")
+    void update_score() {
+        // given
+        long id = 1L;
+        int score = 100;
+        StudentSubject studentSubject = StudentSubject.builder()
+                .student(null)
+                .subject(null)
+                .score(
+                        Score.builder()
+                                .id(id)
+                                .score(90)
+                                .build()
+                )
+                .build();
+
+        // when
+        studentSubject.updateScore(score);
+
+        // then
+        assertThat(studentSubject.getScore().getId()).isEqualTo(id);
+        assertThat(studentSubject.getScore().getScore()).isEqualTo(score);
+    }
 }

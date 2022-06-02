@@ -26,4 +26,16 @@ public class StudentSubject {
 
     @OneToOne(mappedBy = "studentSubject", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Score score;
+
+    public void updateScore(Integer score) {
+        if (this.score == null) {
+            this.score = Score.builder()
+                    .studentSubject(this)
+                    .score(score)
+                    .build();
+            return;
+        }
+
+        this.score.changeScore(this, score);
+    }
 }
