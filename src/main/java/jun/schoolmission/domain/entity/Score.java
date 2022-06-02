@@ -23,4 +23,9 @@ public class Score {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_subject_id", foreignKey = @ForeignKey(name = "FK_SCORE_TO_STUDENT_SUBJECT"))
     private StudentSubject studentSubject;
+
+    public void changeScore(StudentSubject studentSubject, Integer score) {
+        this.studentSubject = studentSubject;
+        this.score = score;
+    }
 }
