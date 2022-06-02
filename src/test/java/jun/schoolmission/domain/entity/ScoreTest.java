@@ -65,4 +65,21 @@ class ScoreTest {
         //then
         assertThat(score1).isNotEqualTo(score2);
     }
+
+    @Test
+    @DisplayName(value = "Score 변경")
+    void change_score() {
+        // given
+        Score score = Score.builder()
+                .score(80)
+                .studentSubject(StudentSubject.builder().build())
+                .build();
+
+        // when
+        int scoreValue = 100;
+        score.changeScore(null, scoreValue);
+
+        // then
+        assertThat(score.getScore()).isEqualTo(scoreValue);
+    }
 }
