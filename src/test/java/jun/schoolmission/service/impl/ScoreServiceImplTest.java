@@ -57,11 +57,12 @@ class ScoreServiceImplTest {
                 .build()
         );
 
-        subjectId = subjectService.createSubject(
-                SubjectDto.builder()
+        subjectId = subjectService.createSubject(SubjectDto.builder()
                         .name("subject")
                         .build()
         );
+        em.flush();
+        em.clear();
     }
 
     @Test
@@ -125,11 +126,11 @@ class ScoreServiceImplTest {
                 .score(90)
                 .build();
         scoreService.updateScore(studentId, subjectId, scoreDto);
+        em.flush();
+        em.clear();
 
         // when
         scoreService.deleteScore(studentId, subjectId);
-        em.flush();
-        em.clear();
 
         // then
         List<StudentSubject> studentSubjects = studentRepository.findById(studentId).get().getStudentSubjects();

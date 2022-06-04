@@ -34,7 +34,15 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
+    @Transactional
     public void deleteScore(Long studentId, Long subjectId) {
+        Optional<Student> studentOptional = studentRepository.findById(studentId);
+        StudentSubject studentSubject = findStudentSubject(studentOptional, studentId, subjectId);
+
+        Student student = studentOptional.get();
+        studentSubject.deleteScore();
+
+        studentRepository.save(student);
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {
