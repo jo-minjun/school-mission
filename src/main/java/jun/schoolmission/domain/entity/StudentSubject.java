@@ -38,4 +38,8 @@ public class StudentSubject {
 
         this.score.changeScore(this, score);
     }
+
+    public void deleteScore() {
+        score = null;
+    }
 }

@@ -146,4 +146,22 @@ class StudentSubjectTest {
         assertThat(studentSubject.getScore().getId()).isEqualTo(id);
         assertThat(studentSubject.getScore().getScore()).isEqualTo(score);
     }
+
+    @Test
+    @DisplayName(value = "Score 삭제")
+    void delete_score() {
+        // given
+        StudentSubject studentSubject = StudentSubject.builder()
+                .score(Score.builder()
+                        .score(100)
+                        .build()
+                )
+                .build();
+
+        // when
+        studentSubject.deleteScore();
+
+        // then
+        assertThat(studentSubject.getScore()).isNull();
+    }
 }
