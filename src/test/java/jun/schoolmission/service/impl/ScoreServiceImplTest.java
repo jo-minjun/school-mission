@@ -1,5 +1,6 @@
 package jun.schoolmission.service.impl;
 
+import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.dto.score.ScoreDto;
 import jun.schoolmission.domain.dto.student.StudentDto;
@@ -21,6 +22,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -113,5 +115,53 @@ class ScoreServiceImplTest {
 
         // then
         assertThat(savedScore.getScore()).isEqualTo(score);
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 성공")
+    void delete_score_success() {
+        // given
+        ScoreDto scoreDto = ScoreDto.builder()
+                .score(90)
+                .build();
+        scoreService.updateScore(studentId, subjectId, scoreDto);
+
+        // when
+        scoreService.deleteScore(studentId, subjectId);
+        em.flush();
+        em.clear();
+
+        // then
+        List<StudentSubject> studentSubjects = studentRepository.findById(studentId).get().getStudentSubjects();
+        Score savedScore = studentSubjects.stream().filter(studentSubject ->
+                        studentSubject.getSubject().getId().equals(subjectId)
+                )
+                .findFirst()
+                .get().getScore();
+        assertThat(savedScore).isNull();
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 실패 - 학생이 없음")
+    void delete_score_fail_student() {
+        // given
+        Long studentId = this.studentId + 1L;
+
+        // when
+        // then
+        assertThatThrownBy(() -> scoreService.deleteScore(studentId, subjectId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 실패 - 과목이 없음")
+    void delete_score_fail_subject() {
+        // given
+        Long subjectId = this.subjectId + 1L;
+
+        // when
+        // then
+        assertThatThrownBy(() -> scoreService.deleteScore(studentId, subjectId))
+                .isInstanceOf(NotFoundException.class);
     }
 }
