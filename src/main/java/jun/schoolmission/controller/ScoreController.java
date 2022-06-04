@@ -23,4 +23,9 @@ public class ScoreController {
         scoreService.updateScore(studentId, subjectId, scoreDto);
         return ResponseEntity.created(URI.create("")).body(new ResponseMessage<>().success(null));
     }
+
+    @PutMapping(value = "/students/{studentId}/subjects/{subjectId}/scores")
+    public ResponseEntity<ResponseMessage<?>> updateScore(@PathVariable Long studentId, @PathVariable Long subjectId, @RequestBody @Valid ScoreDto scoreDto) {
+        return null;
+    }
 }
