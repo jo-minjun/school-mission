@@ -1,6 +1,7 @@
 package jun.schoolmission.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jun.schoolmission.common.exception.CustomExceptionEntity;
 import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.dto.score.ScoreDto;
 import jun.schoolmission.service.ScoreService;
@@ -17,11 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static jun.schoolmission.common.exception.ErrorCode.BAD_REQUEST;
+import static jun.schoolmission.common.exception.ErrorCode.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -142,5 +142,70 @@ class ScoreControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error.code", Matchers.equalTo(BAD_REQUEST.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString("score는 0 ~ 100만 가능합니다.")));
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 성공")
+    void delete_score_success() throws Exception {
+        // given
+        Long studentId = 1L;
+        Long subjectId = 1L;
+
+        doNothing().when(scoreService).deleteScore(studentId, subjectId);
+
+        // when
+        ResultActions request = mockMvc.perform(delete("/students/{studentId}/subjects/{subjectId}/scores", studentId, subjectId));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 실패 - 학생이 없음")
+    void delete_score_fail_student() throws Exception {
+        // given
+        Long studentId = 1L;
+        Long subjectId = 1L;
+
+        CustomExceptionEntity entity = CustomExceptionEntity.builder()
+                .errorCode(STUDENT_NOT_FOUND)
+                .explain(studentId.toString())
+                .build();
+        doThrow(new NotFoundException(entity)).when(scoreService).deleteScore(studentId, subjectId);
+
+        // when
+        ResultActions request = mockMvc.perform(delete("/students/{studentId}/subjects/{subjectId}/scores", studentId, subjectId));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.code", Matchers.equalTo(STUDENT_NOT_FOUND.toString())))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString(STUDENT_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName(value = "Score 삭제 - 실패 - 과목이 없음")
+    void delete_score_fail_subject() throws Exception {
+        // given
+        Long studentId = 1L;
+        Long subjectId = 1L;
+
+        CustomExceptionEntity entity = CustomExceptionEntity.builder()
+                .errorCode(SUBJECT_NOT_FOUND)
+                .explain(subjectId.toString())
+                .build();
+        doThrow(new NotFoundException(entity)).when(scoreService).deleteScore(studentId, subjectId);
+
+        // when
+        ResultActions request = mockMvc.perform(delete("/students/{studentId}/subjects/{subjectId}/scores", studentId, subjectId));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.code", Matchers.equalTo(SUBJECT_NOT_FOUND.toString())))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString(SUBJECT_NOT_FOUND.getMessage())));
     }
 }
