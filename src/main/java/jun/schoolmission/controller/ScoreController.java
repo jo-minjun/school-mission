@@ -29,4 +29,10 @@ public class ScoreController {
         scoreService.updateScore(studentId, subjectId, scoreDto);
         return ResponseEntity.created(URI.create("")).body(new ResponseMessage<>().success(null));
     }
+
+    @DeleteMapping(value = "/students/{studentId}/subjects/{subjectId}/scores")
+    public ResponseEntity<ResponseMessage<?>> deleteScore(@PathVariable Long studentId, @PathVariable Long subjectId) {
+        scoreService.deleteScore(studentId, subjectId);
+        return ResponseEntity.noContent().build();
+    }
 }
