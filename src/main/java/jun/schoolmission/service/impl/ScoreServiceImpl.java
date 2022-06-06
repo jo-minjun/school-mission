@@ -8,7 +8,9 @@ import jun.schoolmission.domain.dto.score.StudentScoreDto;
 import jun.schoolmission.domain.dto.score.SubjectScoreDto;
 import jun.schoolmission.domain.entity.Student;
 import jun.schoolmission.domain.entity.StudentSubject;
+import jun.schoolmission.domain.entity.Subject;
 import jun.schoolmission.domain.repository.StudentRepository;
+import jun.schoolmission.domain.repository.SubjectRepository;
 import jun.schoolmission.service.ScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class ScoreServiceImpl implements ScoreService {
 
     private final StudentRepository studentRepository;
+    private final SubjectRepository subjectRepository;
 
     @Override
     @Transactional
@@ -61,7 +64,14 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public SubjectScoreDto findSubjectAvgScore(Long subjectId) {
-        return null;
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() ->
+                new NotFoundException(CustomExceptionEntity.builder()
+                        .errorCode(ErrorCode.SUBJECT_NOT_FOUND)
+                        .explain(subjectId.toString())
+                        .build())
+        );
+
+        return SubjectScoreDto.of(subject.getStudentSubjects());
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {
