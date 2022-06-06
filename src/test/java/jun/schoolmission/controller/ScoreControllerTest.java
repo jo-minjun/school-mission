@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jun.schoolmission.common.exception.CustomExceptionEntity;
 import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.dto.score.ScoreDto;
+import jun.schoolmission.domain.dto.score.StudentScoreDto;
+import jun.schoolmission.domain.dto.subject.SubjectDto;
+import jun.schoolmission.domain.entity.Subject;
 import jun.schoolmission.service.ScoreService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static jun.schoolmission.common.exception.ErrorCode.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -207,5 +212,29 @@ class ScoreControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty())
                 .andExpect(jsonPath("$.error.code", Matchers.equalTo(SUBJECT_NOT_FOUND.toString())))
                 .andExpect(jsonPath("$.error.message", Matchers.containsString(SUBJECT_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName(value = "학생별 평균 점수 조회 - 성공")
+    void find_student_score_success() {
+        // given
+        Long studentId = 1L;
+        double averageScore = 100D;
+        List<SubjectDto> subjectDtos = Arrays.asList(SubjectDto.builder()
+                        .name("subject")
+                .build()
+        );
+
+        when(scoreService.findStudentAvgScore(studentId))
+                .thenReturn(StudentScoreDto.builder()
+                        .averageScore(averageScore)
+                        .subjects()
+                .build()
+        );
+
+        // when
+
+        // then
+
     }
 }

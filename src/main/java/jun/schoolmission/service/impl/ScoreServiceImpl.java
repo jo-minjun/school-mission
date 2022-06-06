@@ -48,7 +48,14 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public StudentScoreDto findStudentAvgScore(Long studentId) {
-        return null;
+        Student student = studentRepository.findById(studentId).orElseThrow(() ->
+                new NotFoundException(CustomExceptionEntity.builder()
+                        .errorCode(ErrorCode.STUDENT_NOT_FOUND)
+                        .explain(studentId.toString())
+                        .build())
+        );
+
+        return StudentScoreDto.of(student.getStudentSubjects());
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {

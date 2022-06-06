@@ -35,4 +35,9 @@ public class ScoreController {
         scoreService.deleteScore(studentId, subjectId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/students/{studentId}/average-score")
+    public ResponseEntity<ResponseMessage<?>> findStudentScore(@PathVariable Long studentId) {
+        return null;
+    }
 }

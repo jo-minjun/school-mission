@@ -18,10 +18,20 @@ public class SubjectDto {
     @Size(min = 1, max = 12, message = "name은 1 ~ 12 자만 가능합니다.")
     private String name;
 
+    private Integer score;
+
     public static SubjectDto of(Subject subject) {
         return SubjectDto.builder()
                 .id(subject.getId())
                 .name(subject.getName())
+                .build();
+    }
+
+    public static SubjectDto of(Subject subject, Integer score) {
+        return SubjectDto.builder()
+                .id(subject.getId())
+                .name(subject.getName())
+                .score(score)
                 .build();
     }
 

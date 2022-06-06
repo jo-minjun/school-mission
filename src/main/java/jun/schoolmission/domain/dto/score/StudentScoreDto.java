@@ -1,6 +1,7 @@
 package jun.schoolmission.domain.dto.score;
 
 import jun.schoolmission.domain.dto.subject.SubjectDto;
+import jun.schoolmission.domain.entity.Score;
 import jun.schoolmission.domain.entity.StudentSubject;
 import lombok.*;
 
@@ -21,8 +22,10 @@ public class StudentScoreDto {
         int sum = 0;
 
         for (StudentSubject studentSubject : studentSubjects) {
-            subjectDtos.add(SubjectDto.of(studentSubject.getSubject()));
-            sum += studentSubject.getScore().getScore();
+            Score score = studentSubject.getScore();
+            sum += score == null ? -1 : score.getScore();
+
+            subjectDtos.add(SubjectDto.of(studentSubject.getSubject(), score == null ? -1 : score.getScore()));
         }
 
         return StudentScoreDto.builder()
