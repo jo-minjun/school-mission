@@ -6,7 +6,6 @@ import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.dto.score.ScoreDto;
 import jun.schoolmission.domain.dto.score.StudentScoreDto;
 import jun.schoolmission.domain.dto.subject.SubjectDto;
-import jun.schoolmission.domain.entity.Subject;
 import jun.schoolmission.service.ScoreService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static jun.schoolmission.common.exception.ErrorCode.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -216,25 +215,58 @@ class ScoreControllerTest {
 
     @Test
     @DisplayName(value = "학생별 평균 점수 조회 - 성공")
-    void find_student_score_success() {
+    void find_student_score_success() throws Exception {
         // given
         Long studentId = 1L;
-        double averageScore = 100D;
-        List<SubjectDto> subjectDtos = Arrays.asList(SubjectDto.builder()
-                        .name("subject")
+        Long subjectId = 1L;
+        Integer score = 100;
+
+        List<SubjectDto> subjectDtos = List.of(SubjectDto.builder()
+                .id(subjectId)
+                .name("subject")
+                .score(score)
                 .build()
         );
 
         when(scoreService.findStudentAvgScore(studentId))
                 .thenReturn(StudentScoreDto.builder()
-                        .averageScore(averageScore)
-                        .subjects()
-                .build()
-        );
+                        .averageScore((double) score)
+                        .subjects(subjectDtos)
+                        .build()
+                );
 
         // when
+        ResultActions request = mockMvc.perform(get("/students/{studentId}/average-score", studentId));
 
         // then
+        request.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.averageScore").value(score))
+                .andExpect(jsonPath("$.data.subjects").isArray())
+                .andExpect(jsonPath("$.data.subjects.length()", equalTo(1)))
+                .andExpect(jsonPath("$.error").isEmpty());
+    }
 
+    @Test
+    @DisplayName(value = "학생별 평균 점수 조회 - 실패 - 학생 없음")
+    void find_student_score_fail() throws Exception {
+        // given
+        Long studentId = 1L;
+
+        CustomExceptionEntity entity = CustomExceptionEntity.builder()
+                .errorCode(STUDENT_NOT_FOUND)
+                .explain(studentId.toString())
+                .build();
+        when(scoreService.findStudentAvgScore(studentId)).thenThrow(new NotFoundException(entity));
+
+        // when
+        ResultActions request = mockMvc.perform(get("/students/{studentId}/average-score", studentId));
+
+        // then
+        request.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.code", equalTo(STUDENT_NOT_FOUND.toString())))
+                .andExpect(jsonPath("$.error.message", Matchers.containsString(STUDENT_NOT_FOUND.getMessage())));
     }
 }
