@@ -3,6 +3,7 @@ package jun.schoolmission.service.impl;
 import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.dto.score.ScoreDto;
+import jun.schoolmission.domain.dto.score.StudentScoreDto;
 import jun.schoolmission.domain.dto.student.StudentDto;
 import jun.schoolmission.domain.dto.subject.SubjectDto;
 import jun.schoolmission.domain.entity.Score;
@@ -163,6 +164,33 @@ class ScoreServiceImplTest {
         // when
         // then
         assertThatThrownBy(() -> scoreService.deleteScore(studentId, subjectId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName(value = "학생별 평균 점수 조회 - 성공")
+    void find_student_score_success() {
+        // given
+        int score = 80;
+        scoreService.updateScore(studentId, subjectId, ScoreDto.builder().score(score).build());
+
+        // when
+        StudentScoreDto studentAvgScore = scoreService.findStudentAvgScore(studentId);
+
+        // then
+        assertThat(studentAvgScore.getAverageScore()).isEqualTo(80);
+        assertThat(studentAvgScore.getSubjects().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName(value = "학생별 평균 점수 조회 - 실패 - 학생이 없음")
+    void find_student_score_fail() {
+        // given
+        Long studentId = this.studentId + 1L;
+
+        // when
+        // then
+        assertThatThrownBy(() -> scoreService.findStudentAvgScore(studentId))
                 .isInstanceOf(NotFoundException.class);
     }
 }

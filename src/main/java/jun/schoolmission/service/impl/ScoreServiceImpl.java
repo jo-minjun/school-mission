@@ -4,6 +4,7 @@ import jun.schoolmission.common.exception.CustomExceptionEntity;
 import jun.schoolmission.common.exception.ErrorCode;
 import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.dto.score.ScoreDto;
+import jun.schoolmission.domain.dto.score.StudentScoreDto;
 import jun.schoolmission.domain.entity.Student;
 import jun.schoolmission.domain.entity.StudentSubject;
 import jun.schoolmission.domain.repository.StudentRepository;
@@ -43,6 +44,11 @@ public class ScoreServiceImpl implements ScoreService {
         studentSubject.deleteScore();
 
         studentRepository.save(student);
+    }
+
+    @Override
+    public StudentScoreDto findStudentAvgScore(Long studentId) {
+        return null;
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {
