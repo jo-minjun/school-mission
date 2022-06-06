@@ -43,7 +43,7 @@ class StudentScoreDtoTest {
                         .build()
                 )
                 .student(Student.builder()
-                                .id((long) i)
+                                .id(1L)
                                 .build()
                 )
                 .subject(Subject.builder()
