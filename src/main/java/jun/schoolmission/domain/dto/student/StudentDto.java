@@ -37,6 +37,8 @@ public class StudentDto {
     @PhoneNumber(message = "phoneNumber은 000-0000-0000 형식만 가능합니다.")
     private String phoneNumber;
 
+    private Integer score;
+
     public static StudentDto of(Student student) {
         return StudentDto.builder()
                 .id(student.getId())
@@ -44,6 +46,14 @@ public class StudentDto {
                 .age(student.getAge())
                 .schoolType(student.getSchoolType().toString())
                 .phoneNumber(student.getPhoneNumber())
+                .build();
+    }
+
+    public static StudentDto of(Student student, Integer score) {
+        return StudentDto.builder()
+                .id(student.getId())
+                .name(student.getName())
+                .score(score)
                 .build();
     }
 
