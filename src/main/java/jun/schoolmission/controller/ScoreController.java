@@ -2,6 +2,7 @@ package jun.schoolmission.controller;
 
 import jun.schoolmission.common.ResponseMessage;
 import jun.schoolmission.domain.dto.score.ScoreDto;
+import jun.schoolmission.domain.dto.score.StudentScoreDto;
 import jun.schoolmission.service.ScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ public class ScoreController {
 
     @GetMapping(value = "/students/{studentId}/average-score")
     public ResponseEntity<ResponseMessage<?>> findStudentScore(@PathVariable Long studentId) {
-        return null;
+        StudentScoreDto studentScoreDto = scoreService.findStudentAvgScore(studentId);
+        return ResponseEntity.ok().body(new ResponseMessage<>().success(studentScoreDto));
     }
 }
