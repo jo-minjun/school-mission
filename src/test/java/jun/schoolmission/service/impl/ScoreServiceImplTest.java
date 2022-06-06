@@ -4,6 +4,7 @@ import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.SchoolType;
 import jun.schoolmission.domain.dto.score.ScoreDto;
 import jun.schoolmission.domain.dto.score.StudentScoreDto;
+import jun.schoolmission.domain.dto.score.SubjectScoreDto;
 import jun.schoolmission.domain.dto.student.StudentDto;
 import jun.schoolmission.domain.dto.subject.SubjectDto;
 import jun.schoolmission.domain.entity.Score;
@@ -191,6 +192,33 @@ class ScoreServiceImplTest {
         // when
         // then
         assertThatThrownBy(() -> scoreService.findStudentAvgScore(studentId))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    @DisplayName(value = "과목별 평균 점수 조회 - 성공")
+    void find_subject_score_success() {
+        // given
+        int score = 80;
+        scoreService.updateScore(studentId, subjectId, ScoreDto.builder().score(score).build());
+
+        // when
+        SubjectScoreDto subjectAvgScore = scoreService.findSubjectAvgScore(subjectId);
+
+        // then
+        assertThat(subjectAvgScore.getAverageScore()).isEqualTo(80);
+        assertThat(subjectAvgScore.getStudents().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName(value = "과목별 평균 점수 조회 - 실패 - 과목이 없음")
+    void find_subject_score_fail() {
+        // given
+        Long subjectId = this.subjectId + 1L;
+
+        // when
+        // then
+        assertThatThrownBy(() -> scoreService.findSubjectAvgScore(subjectId))
                 .isInstanceOf(NotFoundException.class);
     }
 }

@@ -5,6 +5,7 @@ import jun.schoolmission.common.exception.ErrorCode;
 import jun.schoolmission.common.exception.NotFoundException;
 import jun.schoolmission.domain.dto.score.ScoreDto;
 import jun.schoolmission.domain.dto.score.StudentScoreDto;
+import jun.schoolmission.domain.dto.score.SubjectScoreDto;
 import jun.schoolmission.domain.entity.Student;
 import jun.schoolmission.domain.entity.StudentSubject;
 import jun.schoolmission.domain.repository.StudentRepository;
@@ -56,6 +57,11 @@ public class ScoreServiceImpl implements ScoreService {
         );
 
         return StudentScoreDto.of(student.getStudentSubjects());
+    }
+
+    @Override
+    public SubjectScoreDto findSubjectAvgScore(Long subjectId) {
+        return null;
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {
