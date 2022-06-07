@@ -10,7 +10,7 @@
   * 특정 과목의 평균 점수 조회
 
 ___
-
+<br>
 
 
 ## 목차
@@ -22,7 +22,7 @@ ___
 4. 테스트 코드 커버리지
 
 ___
-
+<br>
 
 
 ## 0. 사용 스택
@@ -33,7 +33,7 @@ ___
 * H2 Database
 * Lombok
 
-
+<br>
 
 ## 1. 실행 방법
 
@@ -47,7 +47,7 @@ ___
    * JDBC URL: **jdbc:h2:tcp://localhost/~/school-mission**
 4. 프로젝트 실행 및 Postman 사용
 
-
+<br>
 
 ## 2. 코드 구조
 
@@ -64,7 +64,7 @@ ___
 │              ├─controller
 │              ├─domain
 │              │    ├─dto
-│              │    |	   ├─score
+│              │    |    ├─score
 │              │    |    ├─student
 │              │    |    └─subject
 │              │    ├─entity
@@ -74,7 +74,7 @@ ___
 └─resources
 ```
 
-
+<br>
 
 ### 패키지 설명
 
@@ -105,19 +105,19 @@ ___
 * **service**: service를 관리하는 패키지
   * **impl**: service 인터페이스에 대한 구현체를 모아놓은 패키지
 
-
+<br>
 
 ## 3. ERD
 
 ![school-mission-erd](./img/school-mission-erd.png)
 
-
+<br>
 
 ## 4. 테스트 코드 커버리지
 
 * 총 **109 개**의 테스트
 
-  ![테스트_코드_케이스](/Users/minjunjo/Study/school-mission/img/테스트_코드_케이스.png)
+  ![테스트_코드_케이스](./img/테스트_코드_케이스.png)
 
 * 클래스 커버리지: **100%**
 
@@ -125,4 +125,4 @@ ___
 
 * 라인 커버리지: **94%**
 
-  ![테스트_코드_커버리지](/Users/minjunjo/Study/school-mission/img/테스트_코드_커버리지.png)
+  ![테스트_코드_커버리지](./img/테스트_코드_커버리지.png)
