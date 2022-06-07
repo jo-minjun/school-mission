@@ -52,26 +52,30 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public StudentScoreDto findStudentAvgScore(Long studentId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() ->
-                new NotFoundException(CustomExceptionEntity.builder()
-                        .errorCode(ErrorCode.STUDENT_NOT_FOUND)
-                        .explain(studentId.toString())
-                        .build())
-        );
+        if (studentRepository.existsById(studentId)) {
+            Student student = studentRepository.findByIdFetch(studentId).get();
 
-        return StudentScoreDto.of(student.getStudentSubjects());
+            return StudentScoreDto.of(student.getStudentSubjects());
+        }
+
+        throw new NotFoundException(CustomExceptionEntity.builder()
+                .errorCode(ErrorCode.STUDENT_NOT_FOUND)
+                .explain(studentId.toString())
+                .build());
     }
 
     @Override
     public SubjectScoreDto findSubjectAvgScore(Long subjectId) {
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() ->
-                new NotFoundException(CustomExceptionEntity.builder()
-                        .errorCode(ErrorCode.SUBJECT_NOT_FOUND)
-                        .explain(subjectId.toString())
-                        .build())
-        );
+        if (subjectRepository.existsById(subjectId)) {
+            Subject subject = subjectRepository.findByIdFetch(subjectId).get();
 
-        return SubjectScoreDto.of(subject.getStudentSubjects());
+            return SubjectScoreDto.of(subject.getStudentSubjects());
+        }
+
+        throw new NotFoundException(CustomExceptionEntity.builder()
+                .errorCode(ErrorCode.SUBJECT_NOT_FOUND)
+                .explain(subjectId.toString())
+                .build());
     }
 
     private StudentSubject findStudentSubject(Optional<Student> studentOptional, Long studentId, Long subjectId) {
