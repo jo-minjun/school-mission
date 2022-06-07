@@ -117,7 +117,7 @@ ___
 
 * 총 **109 개**의 테스트
 
-  ![테스트_코드_케이스](./img/테스트_코드_케이스.png)
+  ![테스트_코드_케이스](https://github.com/jo-minjun/school-mission/blob/main/img/%ED%85%8C%EC%8A%A4%ED%8A%B8_%EC%BD%94%EB%93%9C_%EC%BC%80%EC%9D%B4%EC%8A%A4.png)
 
 * 클래스 커버리지: **100%**
 
@@ -125,4 +125,4 @@ ___
 
 * 라인 커버리지: **94%**
 
-  ![테스트_코드_커버리지](./img/테스트_코드_커버리지.png)
+  ![테스트_코드_커버리지](https://github.com/jo-minjun/school-mission/blob/main/img/%ED%85%8C%EC%8A%A4%ED%8A%B8_%EC%BD%94%EB%93%9C_%EC%BB%A4%EB%B2%84%EB%A6%AC%EC%A7%80.png)
