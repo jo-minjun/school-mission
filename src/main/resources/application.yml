@@ -1,8 +1,9 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/school-mission
-    username: sa
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/school
+    username: root
+    password: 1111
 
   jpa:
     generate-ddl: true
